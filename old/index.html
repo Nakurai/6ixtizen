@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="./app.css">
+    <title>6ixtizen</title>
+</head>
+<body>
+    <div>
+        <p>
+            <label for="dateFirstEntry">
+                date of first entry: <span id="dateFirstEntryString"></span> <br>
+                <input id="dateFirstEntry" type="text" placeholder="YYYY-MM-DD"/>
+            </label>
+            <br>
+            <label for="datePr">
+                date you became PR: <br>
+                <input id="datePr" type="text" placeholder="YYYY-MM-DD">
+            </label>
+        </p>
+    </div>
+    <div>
+        <p>
+            <span id="nbDaysBeforeApply">35353</span> days
+        </p>
+    </div>
+    <div>
+        <p>
+           All your trips abroad since <span id="historyStart"></span>
+           <ul>
+               <li></li>
+           </ul>
+           <label for="newTripFrom">
+               from <input id="newTripFrom" type="text" placeholder="YYYY-MM-DD"/>
+            </label>
+            <label for="newTripTo">
+                to <input id="newTripTo" type="text" placeholder="YYYY-MM-DD"/>
+            </label>
+            <input type="submit" value="add">
+        </p>
+    </div>
+
+    <script src="./utils.js"></script>
+    <script src="./app.js"></script>
+</body>
+</html>
