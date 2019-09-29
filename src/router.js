@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Home from './views/home.vue'
+import LandingPage from './views/landing-page.vue'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -18,13 +19,31 @@ export default new Router({
       component: Home,
       alias: '/'
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (about.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    // }
+    {
+      path: '/landing-page',
+      component: LandingPage,
+    },
   ]
 })
+
+// router.beforeEach((to, from, next) => {
+//   try {
+//     // if the user is using our app, then the route is loaded normally
+//     if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+//       next();
+//     }
+//     // if it is the browser version, then we display the landing page encouraging them to download the app
+//     else {
+//       if (to.path === "/landing-page") {
+//         next();
+//       }
+//       else {
+//         next('/landing-page');
+//       }
+//     }
+//   } catch (error) {
+//     console.error(error);
+//   }
+// })
+
+export default router
