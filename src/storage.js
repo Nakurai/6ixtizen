@@ -1,7 +1,7 @@
 import Dexie from 'dexie'
 class Db {
-    version = 1;
-    name = "6ixtizen";
+    version = null;
+    name = null;
     db = null;
 
     async  init(version, name) {

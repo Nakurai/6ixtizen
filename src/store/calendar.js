@@ -1,12 +1,7 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
 import moment from 'moment'
-import storage from './storage'
-Vue.use(Vuex)
+import storage from '../storage'
 
-storage.init(1, "6ixtizen");
-
-export default new Vuex.Store({
+export default {
   state: {
     datePr: null,
     dateFirstEntry: null,
@@ -17,19 +12,21 @@ export default new Vuex.Store({
       return state.trips
         .filter(t => {
           if (
-            (state.pr < t.to && comparison === "after") ||
-            (state.pr > t.to && comparison === "before")
-          )
+            (state.datePr < t.to && comparison === "after") ||
+            (state.datePr > t.to && comparison === "before")
+          ) {
             return true;
+          }
+          else {
+            return false;
+          }
 
-          return false;
         })
         .sort((trip1, trip2) => {
           return trip1.from <= trip2.from;
         });
     },
-
-    nbDaysAbroadBeforePr(state) {
+    nbDaysAbroadBeforePr: (state) => {
       if (!state.datePr) {
         return [];
       }
@@ -40,7 +37,7 @@ export default new Vuex.Store({
           0
         );
     },
-    nbDaysAbroadAfterPr(state) {
+    nbDaysAbroadAfterPr: (state) => {
       if (!state.datePr) {
         return [];
       }
@@ -51,7 +48,7 @@ export default new Vuex.Store({
           0
         );
     },
-    daysBeforeApplication(state, getters) {
+    daysBeforeApplication: (state, getters) => {
       if (!state.datePr) {
         return null;
       }
@@ -77,26 +74,50 @@ export default new Vuex.Store({
   mutations: {
     updateState(state, value) {
       try {
-        console.log(value);
-
         state = Object.assign(state, value)
       } catch (error) {
         console.error("in mutation/updateState", error);
       }
-    }
+    },
+    addTrip(state, value) {
+      try {
+        state.trips.push(value);
+      } catch (error) {
+        console.error("in mutation/addTrip", error);
+      }
+    },
   },
   actions: {
+
     changeStore({ dispatch, commit }, value) {
       try {
         commit("updateState", value);
-        dispatch("saveCalendarToDb")
+        dispatch("saveDateToDb")
       } catch (error) {
         console.error("in actions/changeStore", error);
       }
 
     },
 
-    async saveCalendarToDb({ state }) {
+    async addTrip({ dispatch, commit }, value) {
+      try {
+        if (value.from && value.to && value.from <= value.to) {
+          console.log("add trip ", value);
+          commit("addTrip", value);
+          await storage.db.trip.add(value);
+        }
+        else {
+          throw "the trip is ill formatted"
+        }
+
+      } catch (error) {
+        console.error("in actions/changeStore", error);
+        throw "ill formatted trip"
+      }
+
+    },
+
+    async saveDateToDb({ state }) {
       try {
         await storage.db.calendar.where("code").equals("datePr").modify({ value: state.datePr });
         await storage.db.calendar.where("code").equals("dateFirstEntry").modify({ value: state.dateFirstEntry });
@@ -133,7 +154,7 @@ export default new Vuex.Store({
 
     }
   }
-})
+};
 
 function nbTripDaysBeforeAndAfterDate(trip, limitDate) {
   let from = moment(trip.from);

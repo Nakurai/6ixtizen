@@ -1,24 +1,30 @@
 <template>
   <div class="home">
     <div>
-      <p>
+      <div>
         <label for="dateFirstEntry">
-          Date of first entry in Canada:
-          <br />
-          <input id="dateFirstEntry" v-model="dateFirstEntry" type="date" placeholder="YYYY-MM-DD" />
+          Date of first entry in Canada
+          <input
+            id="dateFirstEntry"
+            v-model="dateFirstEntry"
+            type="date"
+            placeholder="YYYY-MM-DD"
+          />
         </label>
-        <br />
+        <v-calendar />
+      </div>
+      <div>
         <label for="datePr">
           Date you became PR:
           <br />
           <input id="datePr" v-model="datePr" type="date" placeholder="YYYY-MM-DD" />
         </label>
-      </p>
+      </div>
     </div>
-    <div>
+    <div v-if="$store.state.calendar.datePr && $store.state.calendar.dateFirstEntry">
       <p>{{$store.getters.daysBeforeApplication}} days</p>
     </div>
-    <div>
+    <div v-if="$store.state.calendar.datePr && $store.state.calendar.dateFirstEntry">
       <p>All your trips abroad since your date of entry ({{dateFirstEntry}})</p>
       <ul>
         <li :key="t.id" v-for="t in tripsAfterPr">{{displayTrip(t)}}</li>
@@ -34,6 +40,16 @@
         <label for="newTripTo">
           to
           <input id="newTripTo" v-model="newTrip.to" type="date" placeholder="YYYY-MM-DD" />
+        </label>
+        <br />
+        <label for="newTripLocation">
+          Location:
+          <input
+            id="newTripLocation"
+            v-model="newTrip.location"
+            type="text"
+            placeholder="ex: France"
+          />
         </label>
         <br />
         <input type="submit" value="add a trip" />
@@ -55,17 +71,17 @@ export default {
   components: {},
   data() {
     return {
-      trips: this.$store.state.trips,
       newTrip: {
         from: null,
-        to: null
+        to: null,
+        location: null
       }
     };
   },
   computed: {
     datePr: {
       get() {
-        return this.$store.state.datePr;
+        return this.$store.state.calendar.datePr;
       },
       set(value) {
         this.$store.dispatch("changeStore", { datePr: value });
@@ -73,7 +89,7 @@ export default {
     },
     dateFirstEntry: {
       get() {
-        return this.$store.state.dateFirstEntry;
+        return this.$store.state.calendar.dateFirstEntry;
       },
       set(value) {
         this.$store.dispatch("changeStore", { dateFirstEntry: value });
@@ -87,19 +103,29 @@ export default {
     }
   },
   methods: {
-    addNewTrip(event) {
-      event.preventDefault();
-      if (this.newTrip.from < this.newTrip.to) {
-        this.trips.push({
-          from: this.newTrip.from,
-          to: this.newTrip.to,
-          duration: moment(this.newTrip.to).diff(
-            moment(this.newTrip.from),
-            "days"
-          )
-        });
-        this.newTrip.from = null;
-        this.newTrip.to = null;
+    async addNewTrip(event) {
+      try {
+        event.preventDefault();
+        if (
+          this.newTrip.from &&
+          this.newTrip.to &&
+          this.newTrip.from < this.newTrip.to
+        ) {
+          await this.$store.dispatch("addTrip", {
+            from: this.newTrip.from,
+            to: this.newTrip.to,
+            location: this.newTrip.location,
+            duration: moment(this.newTrip.to).diff(
+              moment(this.newTrip.from),
+              "days"
+            )
+          });
+          this.newTrip.from = null;
+          this.newTrip.to = null;
+          this.newTrip.location = null;
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
     displayTrip(t) {
