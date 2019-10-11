@@ -2,30 +2,23 @@
   <div class="home">
     <div>
       <div>
-        <label for="dateFirstEntry">
-          Date of first entry in Canada
-          <input
-            id="dateFirstEntry"
-            v-model="dateFirstEntry"
-            type="date"
-            placeholder="YYYY-MM-DD"
-          />
-        </label>
-        <v-calendar />
+        <v-date-picker mode="single" v-model="dateFirstEntry">
+          <button>{{dateFirstEntry?"First entry: "+moment(dateFirstEntry).format("YYYY-MM-DD"):"Pick your date of first entry"}}</button>
+        </v-date-picker>
       </div>
       <div>
-        <label for="datePr">
-          Date you became PR:
-          <br />
-          <input id="datePr" v-model="datePr" type="date" placeholder="YYYY-MM-DD" />
-        </label>
+        <v-date-picker mode="single" v-model="datePr">
+          <button>{{datePr?"PR date: "+moment(datePr).format("YYYY-MM-DD"):"Pick the date you became a PR"}}</button>
+        </v-date-picker>
       </div>
     </div>
     <div v-if="$store.state.calendar.datePr && $store.state.calendar.dateFirstEntry">
       <p>{{$store.getters.daysBeforeApplication}} days</p>
     </div>
     <div v-if="$store.state.calendar.datePr && $store.state.calendar.dateFirstEntry">
-      <p>All your trips abroad since your date of entry ({{dateFirstEntry}})</p>
+      {{this.showNewTripModal?"true":false}}
+      <fab @click.native="toggleNewTripModal" :ripple-show="false"></fab>
+      <p>All your trips abroad since your date of first entry ({{moment(dateFirstEntry).format("YYYY-MM-DD")}})</p>
       <ul>
         <li :key="t.id" v-for="t in tripsAfterPr">{{displayTrip(t)}}</li>
       </ul>
@@ -60,18 +53,21 @@
 
 <script>
 import moment from "moment";
+import fab from "vue-fab";
 // @ is an alias to /src
-
-// entry date: 2016 12 28
-// PR date: 2019 01 14
-// trips:
 
 export default {
   name: "home",
-  components: {},
+  components: { fab },
   data() {
     return {
+      moment: moment,
+      showNewTripModal: false,
       newTrip: {
+        dates: {
+          start: new Date(),
+          end: new Date()
+        },
         from: null,
         to: null,
         location: null
@@ -84,7 +80,7 @@ export default {
         return this.$store.state.calendar.datePr;
       },
       set(value) {
-        this.$store.dispatch("changeStore", { datePr: value });
+        this.$store.dispatch("changeCalendar", { datePr: value });
       }
     },
     dateFirstEntry: {
@@ -92,7 +88,9 @@ export default {
         return this.$store.state.calendar.dateFirstEntry;
       },
       set(value) {
-        this.$store.dispatch("changeStore", { dateFirstEntry: value });
+        this.$store.dispatch("changeCalendar", {
+          dateFirstEntry: value
+        });
       }
     },
     tripsBeforePr() {
@@ -103,6 +101,10 @@ export default {
     }
   },
   methods: {
+    toggleNewTripModal() {
+      console.log("in toggle modal");
+      this.showNewTripModal = !this.showNewTripModal;
+    },
     async addNewTrip(event) {
       try {
         event.preventDefault();

@@ -5,7 +5,11 @@ import store from './store/index'
 import './registerServiceWorker'
 import VCalendar from 'v-calendar';
 
-Vue.use(VCalendar);
+Vue.use(VCalendar, {
+  masks: {
+    input: "YYYY-MM-DD"
+  }
+});
 
 Vue.config.productionTip = false
 

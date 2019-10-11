@@ -89,17 +89,18 @@ export default {
   },
   actions: {
 
-    changeStore({ dispatch, commit }, value) {
+    changeCalendar({ dispatch, commit }, value) {
       try {
+        console.log("in change calendar", value)
         commit("updateState", value);
-        dispatch("saveDateToDb")
+        dispatch("saveDateToDb");
       } catch (error) {
-        console.error("in actions/changeStore", error);
+        console.error("in actions/changeCalendar", error);
       }
 
     },
 
-    async addTrip({ dispatch, commit }, value) {
+    async addTrip({ commit }, value) {
       try {
         if (value.from && value.to && value.from <= value.to) {
           console.log("add trip ", value);
@@ -111,7 +112,7 @@ export default {
         }
 
       } catch (error) {
-        console.error("in actions/changeStore", error);
+        console.error("in actions/addTrip", error);
         throw "ill formatted trip"
       }
 
@@ -123,8 +124,7 @@ export default {
         await storage.db.calendar.where("code").equals("dateFirstEntry").modify({ value: state.dateFirstEntry });
         return;
       } catch (error) {
-        console.error(error);
-
+        throw error;
       }
     },
 

@@ -31,5 +31,6 @@ export default {
 <style>
 html {
   font-family: "Roboto", sans-serif;
+  touch-action: manipulation;
 }
 </style>
