@@ -91,7 +91,7 @@ export default {
 
     changeCalendar({ dispatch, commit }, value) {
       try {
-        console.log("in change calendar", value)
+        // console.log("in change calendar", value)
         commit("updateState", value);
         dispatch("saveDateToDb");
       } catch (error) {

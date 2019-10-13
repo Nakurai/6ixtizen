@@ -11,6 +11,11 @@ Vue.use(VCalendar, {
   }
 });
 
+import atui from 'at-ui';
+Vue.use(atui);
+import atuistyle from 'at-ui-style';
+Vue.use(atuistyle);
+
 Vue.config.productionTip = false
 
 new Vue({
