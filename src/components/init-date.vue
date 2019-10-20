@@ -1,23 +1,18 @@
 <template>
-  <div>
-    <div class="row at-row flex-center">
-      <div class="col-24">
-        <v-date-picker mode="single" v-model="dateFirstEntry">
-          <at-button
-            size="large"
-          >{{dateFirstEntry?"First entry: "+moment(dateFirstEntry).format("YYYY-MM-DD"):"Pick your date of first entry"}}</at-button>
-        </v-date-picker>
-      </div>
+  <div class="flex-center">
+    <div class="dt-input">
+      <v-date-picker mode="single" v-model="dateFirstEntry">
+        <at-button
+          size="large"
+        >{{dateFirstEntry?"First entry: "+moment(dateFirstEntry).format("Do MMM YYYY"):"Pick your date of first entry"}}</at-button>
+      </v-date-picker>
     </div>
-
-    <div class="row at-row flex-center">
-      <div class="col-24">
-        <v-date-picker mode="single" v-model="datePr">
-          <at-button
-            size="large"
-          >{{datePr?"PR date: "+moment(datePr).format("YYYY-MM-DD"):"Pick the date you became a PR"}}</at-button>
-        </v-date-picker>
-      </div>
+    <div class="dt-input">
+      <v-date-picker mode="single" v-model="datePr">
+        <at-button
+          size="large"
+        >{{datePr?"PR date: "+moment(datePr).format("Do MMM YYYY"):"Pick the date you became a PR"}}</at-button>
+      </v-date-picker>
     </div>
   </div>
 </template>
@@ -57,3 +52,9 @@ export default {
   methods: {}
 };
 </script>
+
+<style>
+.dt-input {
+  margin-bottom: 10px;
+}
+</style>

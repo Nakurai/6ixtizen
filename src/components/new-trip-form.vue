@@ -1,20 +1,27 @@
 <template>
-  <form name="newTrip" @submit="saveTrip">
-    Range date:
+  <form name="newTrip" @submit="saveTrip" class="flex-center">
+    Pick start and end date:
     <v-date-picker mode="range" is-inline v-model="newTrip.dates" />
+    <br />
     <label for>
-      Location:
+      Enter any location:
       <br />
       <input type="text" placeholder="ex: france" v-model="newTrip.location" />
     </label>
     <br />
-    <input type="submit" value="Save" />
-    <button @click="$emit('cancel')">Cancel</button>
+    <br />
+    <div class="row at-row no-gutter flex-center">
+      <div class="col-sm-6" style="width: 50%;">
+        <at-button style="width: 100%;" size="large" @click="saveTrip">Save</at-button>
+      </div>
+      <div class="col-sm-6" style="width: 50%;">
+        <at-button style="width: 100%;" size="large" @click="$emit('cancel')">Cancel</at-button>
+      </div>
+    </div>
   </form>
 </template>
 
 <script>
-// import moment from "moment";
 // @ is an alias to /src
 
 export default {
@@ -37,6 +44,7 @@ export default {
       event.preventDefault();
       if (
         this.newTrip.dates.start &&
+        this.newTrip.location &&
         this.newTrip.dates.end &&
         this.newTrip.dates.start <= this.newTrip.dates.end
       ) {
@@ -56,3 +64,5 @@ export default {
   }
 };
 </script>
+<style>
+</style>

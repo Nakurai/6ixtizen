@@ -33,4 +33,8 @@ html {
   font-family: "Roboto", sans-serif;
   touch-action: manipulation;
 }
+.test {
+  border: 1px solid black;
+  color: red;
+}
 </style>

@@ -86,12 +86,21 @@ export default {
         console.error("in mutation/addTrip", error);
       }
     },
+    deleteTrip(state, value) {
+      try {
+        state.trips = state.trips.filter(t => {
+          return value.id !== t.id;
+        });
+
+      } catch (error) {
+        console.error("in mutation/deleteTrip", error);
+      }
+    },
   },
   actions: {
 
     changeCalendar({ dispatch, commit }, value) {
       try {
-        // console.log("in change calendar", value)
         commit("updateState", value);
         dispatch("saveDateToDb");
       } catch (error) {
@@ -100,10 +109,26 @@ export default {
 
     },
 
+    async deleteTrip({ commit }, trip) {
+      try {
+        if (trip.id) {
+          commit("deleteTrip", trip);
+          await storage.db.trip.delete(trip.id);
+        }
+        else {
+          throw "the trip is ill formatted"
+        }
+
+      } catch (error) {
+        console.error("in actions/delete", error);
+        throw "ill formatted trip"
+      }
+
+    },
+
     async addTrip({ commit }, value) {
       try {
         if (value.from && value.to && value.from <= value.to) {
-          console.log("add trip ", value);
           commit("addTrip", value);
           await storage.db.trip.add(value);
         }
