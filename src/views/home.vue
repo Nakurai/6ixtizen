@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <countdown />
-    <initDate v-if="$store.state.calendar.datePr && $store.state.calendar.dateFirstEntry" />
+    <countdown v-if="$store.state.calendar.datePr && $store.state.calendar.dateFirstEntry" />
+    <initDate />
     <div v-if="$store.state.calendar.datePr && $store.state.calendar.dateFirstEntry">
       <br />
       <tripTimeline />
